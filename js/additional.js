@@ -7,16 +7,19 @@ getNumber('2023 год');
 
 // Счастливый билет
 function isHappyTicket (number) {
-  if (number.toString().length % 2 !== 0) {
+  const preparedData = number.toString();
+
+  if (preparedData.length % 2 !== 0) {
     return false;
   }
-  const leftDigits = number.toString().slice(0, number.toString().length / 2)
+  const leftDigits = preparedData.slice(0, preparedData.length / 2)
     .split('').reduce((a, b) => +a + +b);
-  const rightDigits = number.toString().slice(-number.toString().length / 2)
+  const rightDigits = preparedData.slice(- preparedData.length / 2)
     .split('').reduce((a, b) => +a + +b);
 
   return leftDigits === rightDigits;
 }
+
 isHappyTicket(11123555532111);
 
 
