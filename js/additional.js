@@ -9,31 +9,16 @@ getNumber('2023 год');
 function isHappyTicket (number) {
   if (number.toString().length % 2 !== 0) {
     return false;
-  } else if (number.toString().slice(0, number.toString().length / 2)
-    .split('').reduce((a, b) => +a + +b)
-   === number.toString().slice(-number.toString().length / 2)
-     .split('').reduce((a, b) => +a + +b)) {
-    return true;
-  } else {
-    return false;
   }
-}
+  const leftDigits = number.toString().slice(0, number.toString().length / 2)
+    .split('').reduce((a, b) => +a + +b);
+  const rightDigits = number.toString().slice(-number.toString().length / 2)
+    .split('').reduce((a, b) => +a + +b);
 
-isHappyTicket(1113553111);
-
-//А вот так не работает, вернее, если правая половина !== левой, возвращает undefined
-/*
-function isHappyTicket (number) {
-  if (number.toString().length % 2 !== 0) {
-    return false;
-  } else if (number.toString().slice(0, number.toString().length / 2)
-    .split('').reduce((a, b) => +a + +b)
-   === number.toString().slice(-number.toString().length / 2)
-     .split('').reduce((a, b) => +a + +b)) {
-    return true;
-  }
+  return leftDigits === rightDigits;
 }
-*/
+isHappyTicket(11123555532111);
+
 
 // Меняем регистр
 function invertCase (string) {
