@@ -16,7 +16,7 @@ function isPalindrom (string) {
 isPalindrom('Лёша на полке клопа нашёл');
 
 
-// Извлечение чисел (1 вариант, мне понятный)
+// Извлечение чисел (понятный вариант)
 function extractNumber (string) {
   let result = '';
   for (let i = 0; i < string.length; i++) {
@@ -30,15 +30,6 @@ function extractNumber (string) {
 extractNumber('ECMAScript 2022');
 
 
-/* Извлечение чисел (2 вариант, максимально сокращенный и не сильно понятный ;))
-немного почитала про регулярные выражения */
-function getNumber (text) {
-  return parseInt(text.toString().replace(/\D/g,''), 10 || NaN,);
-}
-
-getNumber('2023 год');
-
-
 /* Возвращает исходную строку (вариант 2, с помощью тернарного оператора
   и стрелочной функции) */
 const myPadStart = (string, minLength, pad) => {
@@ -49,34 +40,3 @@ const myPadStart = (string, minLength, pad) => {
 
 myPadStart('q', 4, 'werty');
 
-
-// Счастливый билет
-function isHappyTicket (number) {
-  const leftDigits = number.toString().slice(0, 3).split('').reduce((a, b) => +a + +b);
-  const rightDigits = number.toString().slice(-3).split('').reduce((a, b) => +a + +b);
-  if (leftDigits === rightDigits) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-isHappyTicket(222222222);
-
-
-// Меняем регистр
-function invertCase (string) {
-  let result = '';
-  for (let i = 0; i < string.length; i++) {
-    if (string[i] === string[i].toUpperCase()) {
-      result += string[i].toLowerCase();
-    } else if (string[i] === string[i].toLowerCase()) {
-      result += string[i].toUpperCase();
-    } else {
-      result += string[i];
-    }
-  }
-  return result;
-}
-
-invertCase('helLo WOrld!');
