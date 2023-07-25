@@ -1,3 +1,23 @@
+const getRandomInteger = (a, b) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+};
+
+const getRandomArrayElement = (array) =>
+  array[getRandomInteger(0, array.length - 1)];
+
+const createIdGenerator = () => {
+  let lastGeneratedId = 0;
+
+  return function () {
+    lastGeneratedId += 1;
+    return lastGeneratedId;
+  };
+};
+
+// Тренировочные функции
 // Проверка длины строки
 const checkStringLength = (string, length) => string.length <= length;
 
@@ -32,4 +52,6 @@ const myPadStart = (string, minLength, pad) => {
 };
 
 myPadStart('q', 4, 'werty');
+
+export { getRandomInteger, getRandomArrayElement, createIdGenerator };
 
