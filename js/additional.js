@@ -1,12 +1,10 @@
-// Извлечение чисел (2 вариант + убрала || NaN)
-function getNumber (text) {
-  return parseInt(text.toString().replace(/\D/g,''), 10);
-}
+// Извлечение чисел
+const getNumber = (text) => parseInt(text.toString().replace(/\D/g,''), 10);
 
 getNumber('2023 год');
 
 // Счастливый билет
-function isHappyTicket (number) {
+const isHappyTicket = (number) => {
   const preparedData = number.toString();
 
   if (preparedData.length % 2 !== 0) {
@@ -18,13 +16,13 @@ function isHappyTicket (number) {
     .split('').reduce((a, b) => +a + +b);
 
   return leftDigits === rightDigits;
-}
+};
 
 isHappyTicket(11123555532111);
 
 
 // Меняем регистр
-function invertCase (string) {
+const invertCase = (string) => {
   let result = '';
   for (let i = 0; i < string.length; i++) {
     if (string[i] === string[i].toUpperCase()) {
@@ -34,7 +32,7 @@ function invertCase (string) {
     }
   }
   return result;
-}
+};
 
 invertCase('Hello World!');
 
