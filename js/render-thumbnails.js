@@ -4,7 +4,7 @@ const picturesContainer = document.querySelector('.pictures');
 const picturesTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 // Функция для заполнения миниатюры по шаблону
-const createThumbnail = ({ url, description, comments, likes}) => {
+const createThumbnail = ({ url, description, comments, likes, id }) => {
   // Клонирование шаблона
   const pictureElement = picturesTemplate.cloneNode(true);
   // Превью фото
@@ -12,6 +12,7 @@ const createThumbnail = ({ url, description, comments, likes}) => {
   pictureElement.querySelector('.picture__img').alt = description;
   pictureElement.querySelector('.picture__comments').textContent = comments.length;
   pictureElement.querySelector('.picture__likes').textContent = likes;
+  pictureElement.dataset.thumbnailId = id;
 
   return pictureElement;
 };
