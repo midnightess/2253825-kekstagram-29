@@ -53,13 +53,6 @@ const hideBigPicture = () => {
 };
 
 const onEscKeydown = (evt) => isEscKeydown(evt) && hideBigPicture();
-/*const onEscKeydown = (evt) => {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    hideBigPicture();
-  }
-};
-*/
 
 const onCancelButtonClick = () => {
   hideBigPicture();
