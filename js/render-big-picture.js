@@ -1,50 +1,49 @@
+import { isEscKeydown } from './keydowns.js';
+
 const bigPictureElement = document.querySelector('.big-picture');
-const bigPictureCloseBtnElement = document.querySelector('.big-picture__cancel');
-const bigPictureCommentsElement = document.querySelector('.social__comments');
-// Тут косяк:
-const commentCountElement = document.querySelector('.social__comment-count');
-// и тут
-const commentsCountElement = document.querySelector('.comments-count');
-const commentsShownCountElement = document.querySelector('.comments-shown-count');
+const commentElement = document.querySelector('.social__comment');
 const commentsLoaderElement = document.querySelector('.comments-loader');
-// Может эту константу в utils.js?
+const bigPictureCommentsElement = document.querySelector('.social__comments');
+const commentsCounterElement = document.querySelector('.comments-count');
+const renderCommentsElement = document.querySelector('.comments-render-count');
 const bodyElement = document.querySelector('body');
-//
+const bigPictureCloseBtnElement = document.querySelector('.big-picture__cancel');
 const COMMENTS_STEP = 5;
 
-let commentsShown = 0;
-let comments = [];
 
-//
 const createComment = ({ avatar, name, message }) => {
-  const comment = commentCountElement.cloneNode(true);
+
+  const comment = commentElement.cloneNode(true);
 
   comment.querySelector('.social__picture').src = avatar;
   comment.querySelector('.social__picture').alt = name;
   comment.querySelector('.social__text').textContent = message;
-
   return comment;
 };
-// и тут косяк (((
-const renderComments = () => {
-  commentsShown += COMMENTS_STEP;
-  //
-  if (commentsShown >= comments.length) {
+
+
+const renderComments = (comments, counter) => {
+
+  if (counter >= comments.length) {
     commentsLoaderElement.classList.add('hidden');
-    commentsShown = comments.length;
+    counter = comments.length;
   } else {
     commentsLoaderElement.classList.remove('hidden');
   }
+
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < commentsShown; i++) {
+
+  for (let i = 0; i < counter; i++) {
     const comment = createComment(comments[i]);
     fragment.append(comment);
   }
+
   bigPictureCommentsElement.innerHTML = '';
   bigPictureCommentsElement.append(fragment);
-  commentsShownCountElement.textContent = commentsShown;
-  commentsCountElement.textContent = comments.length;
+  commentsCounterElement.textContent = comments.length;
+  renderCommentsElement.textContent = counter;
 };
+
 
 const hideBigPicture = () => {
   bigPictureElement.classList.add('hidden');
@@ -52,45 +51,52 @@ const hideBigPicture = () => {
   // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onEscKeydown);
 };
-// Закрытие с помощью esc универсальная функция, мб в utils.js и назову isEscKeydown(pressed)?
-const onEscKeydown = (evt) => {
+
+const onEscKeydown = (evt) => isEscKeydown(evt) && hideBigPicture();
+/*const onEscKeydown = (evt) => {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     hideBigPicture();
   }
 };
-//
+*/
+
 const onCancelButtonClick = () => {
   hideBigPicture();
 };
-const onCommentsLoaderClick = () => renderComments();
 
 bigPictureCloseBtnElement.addEventListener('click', onCancelButtonClick);
-commentsCountElement.addEventListener('click', onCommentsLoaderClick);
 
-const renderPictureDetails = ({ url, likes, description }) => {
+const renderPictureDetails = ({ url, likes, description, }) => {
   bigPictureElement.querySelector('.big-picture__img img').src = url;
   bigPictureElement.querySelector('.big-picture__img img').alt = description;
   bigPictureElement.querySelector('.likes-count').textContent = likes;
   bigPictureElement.querySelector('.social__caption').textContent = description;
 };
 
-const showBigPicture = (data) => {
+const showBigPicture = (picture) => {
+
+  let currentCounter = COMMENTS_STEP;
+
+  bigPictureCommentsElement.classList.remove('hidden');
+
+  commentsLoaderElement.classList.remove('hidden');
+
   bigPictureElement.classList.remove('hidden');
+
   bodyElement.classList.add('modal-open');
-  commentsLoaderElement.classList.add('hidden');
-  commentsCountElement.classList.add('hidden');
+
   document.addEventListener('keydown', onEscKeydown);
 
-  renderPictureDetails(data);
-  comments = data.comments;
-  if (comments.length > 0) {
-    renderComments();
-  }
+  commentsLoaderElement.addEventListener('click', () => {
+    currentCounter += COMMENTS_STEP;
+    renderComments(picture.comments, currentCounter);
+  });
+
+  renderPictureDetails(picture);
+
+  renderComments(picture.comments, COMMENTS_STEP);
 };
 
 export { showBigPicture };
-
-// мб 'modal-open' и 'hidden' вынести в utils.js?
-
 
