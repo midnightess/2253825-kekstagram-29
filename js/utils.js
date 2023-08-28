@@ -15,6 +15,9 @@ const createIdGenerator = () => {
     return lastGeneratedId;
   };
 };
+// Перенесла эскейп
+const isEscKeydown = (evt) => evt.key === 'Escape';
 
-export { getRandomInteger, getRandomArrayElement, createIdGenerator };
+
+export { getRandomInteger, getRandomArrayElement, createIdGenerator, isEscKeydown };
 

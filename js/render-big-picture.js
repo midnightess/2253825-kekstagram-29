@@ -1,4 +1,4 @@
-import { isEscKeydown } from './keydowns.js';
+import { isEscKeydown } from './utils.js';
 
 const bigPictureElement = document.querySelector('.big-picture');
 const commentElement = document.querySelector('.social__comment');
@@ -9,6 +9,8 @@ const renderCommentsElement = document.querySelector('.comments-render-count');
 const bodyElement = document.querySelector('body');
 const bigPictureCloseBtnElement = document.querySelector('.big-picture__cancel');
 const COMMENTS_STEP = 5;
+// Форма для коммента:
+//const commentField = document.querySelector('.footer-text');
 
 
 const createComment = ({ avatar, name, message }) => {
@@ -23,6 +25,8 @@ const createComment = ({ avatar, name, message }) => {
 
 
 const renderComments = (comments, counter) => {
+// Перенесла сюда
+  let currentCounter = COMMENTS_STEP;
 
   if (counter >= comments.length) {
     commentsLoaderElement.classList.add('hidden');
@@ -37,25 +41,39 @@ const renderComments = (comments, counter) => {
     const comment = createComment(comments[i]);
     fragment.append(comment);
   }
+  // Перенесла
+  commentsLoaderElement.addEventListener('click', () => {
+    currentCounter += COMMENTS_STEP;
+    renderComments(comments, currentCounter);
+  });
 
   bigPictureCommentsElement.innerHTML = '';
   bigPictureCommentsElement.append(fragment);
   commentsCounterElement.textContent = comments.length;
   renderCommentsElement.textContent = counter;
 };
-
-
-const hideBigPicture = () => {
-  bigPictureElement.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
-  // eslint-disable-next-line no-use-before-define
-  document.removeEventListener('keydown', onEscKeydown);
-};
-
+// Тут не поняла, о какой проверке речь, перенесла, линтер не ругается
 const onEscKeydown = (evt) => isEscKeydown(evt) && hideBigPicture();
 
+// Или так написать? Здесь вообще нужен evt.preventDefault?
+/*
+const onEscKeydown = (evt) => {
+  if (isEscKeydown(evt)) {
+    evt.preventDefault();
+    hideBigPicture();
+  }
+};
+*/
+function hideBigPicture() {
+  bigPictureElement.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+  document.removeEventListener('keydown', onEscKeydown);
+  commentsLoaderElement.removeEventListener('click');
+}
+// Как сюда перенести проверку?
 const onCancelButtonClick = () => {
   hideBigPicture();
+  //commentField.reset(); // Куда это впихнуть?
 };
 
 bigPictureCloseBtnElement.addEventListener('click', onCancelButtonClick);
@@ -68,24 +86,21 @@ const renderPictureDetails = ({ url, likes, description, }) => {
 };
 
 const showBigPicture = (picture) => {
-
-  let currentCounter = COMMENTS_STEP;
+  //Перетащила наверх:
+  //let currentCounter = COMMENTS_STEP;
 
   bigPictureCommentsElement.classList.remove('hidden');
-
   commentsLoaderElement.classList.remove('hidden');
-
   bigPictureElement.classList.remove('hidden');
-
   bodyElement.classList.add('modal-open');
-
   document.addEventListener('keydown', onEscKeydown);
-
+  // Перетащила наверх:
+  /*
   commentsLoaderElement.addEventListener('click', () => {
     currentCounter += COMMENTS_STEP;
     renderComments(picture.comments, currentCounter);
   });
-
+  */
   renderPictureDetails(picture);
 
   renderComments(picture.comments, COMMENTS_STEP);
