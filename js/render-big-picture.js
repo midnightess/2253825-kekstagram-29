@@ -9,8 +9,8 @@ const renderCommentsElement = document.querySelector('.comments-render-count');
 const bodyElement = document.querySelector('body');
 const bigPictureCloseBtnElement = document.querySelector('.big-picture__cancel');
 const COMMENTS_STEP = 5;
-// Форма для коммента:
-//const commentField = document.querySelector('.footer-text');
+
+const commentField = document.querySelector('.social__footer-text');
 
 
 const createComment = ({ avatar, name, message }) => {
@@ -41,7 +41,7 @@ const renderComments = (comments, counter) => {
     const comment = createComment(comments[i]);
     fragment.append(comment);
   }
-  // Перенесла
+
   commentsLoaderElement.addEventListener('click', () => {
     currentCounter += COMMENTS_STEP;
     renderComments(comments, currentCounter);
@@ -52,31 +52,19 @@ const renderComments = (comments, counter) => {
   commentsCounterElement.textContent = comments.length;
   renderCommentsElement.textContent = counter;
 };
-// Тут не поняла, о какой проверке речь, перенесла, линтер не ругается
+
+// eslint-disable-next-line no-use-before-define
 const onEscKeydown = (evt) => isEscKeydown(evt) && hideBigPicture();
 
-// Или так написать? Здесь вообще нужен evt.preventDefault?
-/*
-const onEscKeydown = (evt) => {
-  if (isEscKeydown(evt)) {
-    evt.preventDefault();
-    hideBigPicture();
-  }
-};
-*/
-function hideBigPicture() {
+const hideBigPicture = () => {
   bigPictureElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscKeydown);
   commentsLoaderElement.removeEventListener('click');
-}
-// Как сюда перенести проверку?
-const onCancelButtonClick = () => {
-  hideBigPicture();
-  //commentField.reset(); // Куда это впихнуть?
+  commentField.reset();
 };
 
-bigPictureCloseBtnElement.addEventListener('click', onCancelButtonClick);
+bigPictureCloseBtnElement.addEventListener('click', hideBigPicture);
 
 const renderPictureDetails = ({ url, likes, description, }) => {
   bigPictureElement.querySelector('.big-picture__img img').src = url;
@@ -86,21 +74,13 @@ const renderPictureDetails = ({ url, likes, description, }) => {
 };
 
 const showBigPicture = (picture) => {
-  //Перетащила наверх:
-  //let currentCounter = COMMENTS_STEP;
 
   bigPictureCommentsElement.classList.remove('hidden');
   commentsLoaderElement.classList.remove('hidden');
   bigPictureElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
   document.addEventListener('keydown', onEscKeydown);
-  // Перетащила наверх:
-  /*
-  commentsLoaderElement.addEventListener('click', () => {
-    currentCounter += COMMENTS_STEP;
-    renderComments(picture.comments, currentCounter);
-  });
-  */
+
   renderPictureDetails(picture);
 
   renderComments(picture.comments, COMMENTS_STEP);
