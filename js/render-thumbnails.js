@@ -29,7 +29,6 @@ const renderPictures = (pictures) => {
 
   picturesContainer.append(picturesFragment);
 
-  // Перенесла слушатель из галереи
   picturesContainer.addEventListener('click', (evt) => {
     const thumbnail = evt.target.closest('[data-thumbnail-id]');
     if (!thumbnail) {

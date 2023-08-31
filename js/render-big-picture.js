@@ -1,16 +1,15 @@
 import { isEscKeydown } from './utils.js';
 
 const bigPictureElement = document.querySelector('.big-picture');
-const commentElement = document.querySelector('.social__comment');
-const commentsLoaderElement = document.querySelector('.comments-loader');
-const bigPictureCommentsElement = document.querySelector('.social__comments');
-const commentsCounterElement = document.querySelector('.comments-count');
-const renderCommentsElement = document.querySelector('.comments-render-count');
+const commentElement = bigPictureElement.querySelector('.social__comment');
+const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
+const bigPictureCommentsElement = bigPictureElement.querySelector('.social__comments');
+const commentsCounterElement = bigPictureElement.querySelector('.comments-count');
+const renderCommentsElement = bigPictureElement.querySelector('.comments-render-count');
 const bodyElement = document.querySelector('body');
-const bigPictureCloseBtnElement = document.querySelector('.big-picture__cancel');
+const bigPictureCloseBtnElement = bigPictureElement.querySelector('.big-picture__cancel');
+const commentFieldElement = document.querySelector('.social__footer');
 const COMMENTS_STEP = 5;
-
-const commentField = document.querySelector('.social__footer-text');
 
 
 const createComment = ({ avatar, name, message }) => {
@@ -25,14 +24,19 @@ const createComment = ({ avatar, name, message }) => {
 
 
 const renderComments = (comments, counter) => {
-// Перенесла сюда
-  let currentCounter = COMMENTS_STEP;
+  let currentCounter = counter;
+
+  const hendlerLoadComments = () => {
+    currentCounter += COMMENTS_STEP;
+    renderComments(comments, currentCounter);
+  };
 
   if (counter >= comments.length) {
     commentsLoaderElement.classList.add('hidden');
     counter = comments.length;
   } else {
     commentsLoaderElement.classList.remove('hidden');
+    removeEventListener('click', hendlerLoadComments);
   }
 
   const fragment = document.createDocumentFragment();
@@ -42,29 +46,13 @@ const renderComments = (comments, counter) => {
     fragment.append(comment);
   }
 
-  commentsLoaderElement.addEventListener('click', () => {
-    currentCounter += COMMENTS_STEP;
-    renderComments(comments, currentCounter);
-  });
+  commentsLoaderElement.addEventListener('click', hendlerLoadComments, {once: true});
 
   bigPictureCommentsElement.innerHTML = '';
   bigPictureCommentsElement.append(fragment);
   commentsCounterElement.textContent = comments.length;
   renderCommentsElement.textContent = counter;
 };
-
-// eslint-disable-next-line no-use-before-define
-const onEscKeydown = (evt) => isEscKeydown(evt) && hideBigPicture();
-
-const hideBigPicture = () => {
-  bigPictureElement.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
-  document.removeEventListener('keydown', onEscKeydown);
-  commentsLoaderElement.removeEventListener('click');
-  commentField.reset();
-};
-
-bigPictureCloseBtnElement.addEventListener('click', hideBigPicture);
 
 const renderPictureDetails = ({ url, likes, description, }) => {
   bigPictureElement.querySelector('.big-picture__img img').src = url;
@@ -73,16 +61,30 @@ const renderPictureDetails = ({ url, likes, description, }) => {
   bigPictureElement.querySelector('.social__caption').textContent = description;
 };
 
-const showBigPicture = (picture) => {
 
+const hideBigPicture = () => {
+  bigPictureElement.classList.add('hidden');
+  bodyElement.classList.remove('modal-open');
+  commentFieldElement.reset();
+};
+
+const handleCloseOnEsc = (evt) => {
+  if(isEscKeydown(evt)) {
+    hideBigPicture();
+    document.removeEventListener('keydown', handleCloseOnEsc);
+  }
+};
+
+const showBigPicture = (picture) => {
   bigPictureCommentsElement.classList.remove('hidden');
   commentsLoaderElement.classList.remove('hidden');
   bigPictureElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
-  document.addEventListener('keydown', onEscKeydown);
+
+  document.addEventListener('keydown', handleCloseOnEsc);
+  bigPictureCloseBtnElement.addEventListener('click', hideBigPicture, {once: true});
 
   renderPictureDetails(picture);
-
   renderComments(picture.comments, COMMENTS_STEP);
 };
 

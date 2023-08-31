@@ -15,7 +15,7 @@ const createIdGenerator = () => {
     return lastGeneratedId;
   };
 };
-// Перенесла эскейп
+
 const isEscKeydown = (evt) => evt.key === 'Escape';
 
 
