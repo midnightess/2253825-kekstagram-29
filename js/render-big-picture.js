@@ -1,5 +1,6 @@
 import { isEscKeydown } from './utils.js';
 
+const COMMENTS_STEP = 5;
 const bigPictureElement = document.querySelector('.big-picture');
 const commentElement = bigPictureElement.querySelector('.social__comment');
 const commentsLoaderElement = bigPictureElement.querySelector('.comments-loader');
@@ -9,7 +10,6 @@ const renderCommentsElement = bigPictureElement.querySelector('.comments-render-
 const bodyElement = document.querySelector('body');
 const bigPictureCloseBtnElement = bigPictureElement.querySelector('.big-picture__cancel');
 const commentFieldElement = document.querySelector('.social__footer');
-const COMMENTS_STEP = 5;
 
 
 const createComment = ({ avatar, name, message }) => {

@@ -33,8 +33,8 @@ const onBiggerBtnClick = () => {
   scaleImg(newValue);
 };
 
-smallerBtnElement.addEventListener('click', onSmallerBtnClick, {once: true});
-biggerBtnElement.addEventListener('click', onBiggerBtnClick, {once: true});
+smallerBtnElement.addEventListener('click', onSmallerBtnClick);
+biggerBtnElement.addEventListener('click', onBiggerBtnClick);
 
 const resetScale = () => scaleImg(DEFAULT_SCALE);
 

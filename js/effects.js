@@ -49,14 +49,15 @@ const EFFECTS = [
   },
 ];
 
+const DEFAULT_EFFECT = EFFECTS[0];
+let chosenEffect = DEFAULT_EFFECT;
+
 const imgElement = document.querySelector('.img-upload__preview img');
-const effectsElement = document.querySelectorAll('.effects');
+const effectsElement = document.querySelector('.effects');
 const sliderElement = document.querySelector('.effect-level__slider');
 const sliderContainerElement = document.querySelector('.img-upload__effect-level');
 const effectLevelElement = document.querySelector('.effect-level__value');
 
-const DEFAULT_EFFECT = EFFECTS[0];
-let chosenEffect = DEFAULT_EFFECT;
 
 const isDefault = () => chosenEffect === DEFAULT_EFFECT;
 
@@ -118,7 +119,7 @@ const resetEffects = () => {
   updateSlider();
 };
 
-effectsElement.addEventListener('change', onEffectsChange, {once: true});
+effectsElement.addEventListener('change', onEffectsChange);
 sliderElement.noUiSlider.on('update', onSliderUpdate);
 
 export { resetEffects };
