@@ -1,6 +1,7 @@
-import { isEscKeydown } from './utils.js';
+import { isEscKeydown, /*showAlert*/ } from './utils.js';
 import { resetEffects } from './effects.js';
 import { resetScale } from './scale.js';
+//import { sendData } from './api.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -13,7 +14,12 @@ const imgOverlayElement = bodyElement.querySelector('.img-upload__overlay');
 const cancelBtnElement = bodyElement.querySelector('#upload-cancel');
 const hashtagElement = bodyElement.querySelector('.text__hashtags');
 const descriptionElement = bodyElement.querySelector('.text__description');
+const submitBtnElement = document.querySelector('.img-upload__submit');
 
+const SubmitBtnText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикую...'
+};
 
 const pristine = new Pristine(formElement, {
   classTo:'img-upload__field-wrapper',
@@ -57,16 +63,21 @@ const resetAllInModal = () => {
   resetEffects();
 };
 
-const closeModal = () => {
+const hideModal = () => {
   resetAllInModal();
   imgOverlayElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
+  // Если ремуваю эти обработчики, пропадает возможность многократно загружать форму
+  // и вообще вылезает ошибка 404
+  //uploadFileElement.removeEventListener('change', showModal);
+  //cancelBtnElement.removeEventListener('click', hideModal);
+  //formElement.removeEventListener('submit', onFormSubmit);
 };
 
 const handleCloseOnEsc = (evt) => {
   if(isEscKeydown(evt) && !onElementFocus()) {
     evt.preventDefault();
-    closeModal();
+    hideModal();
     document.removeEventListener('keydown', handleCloseOnEsc);
   }
 };
@@ -81,10 +92,54 @@ const showModal = () => {
 const setupForm = () => {
 
   uploadFileElement.addEventListener('change', showModal);
-  cancelBtnElement.addEventListener('click', closeModal);
+  cancelBtnElement.addEventListener('click', hideModal);
   formElement.addEventListener('submit', onFormSubmit);
   descriptionElement.textContent = '';
 };
 
+const blockSubmitBtn = () => {
+  submitBtnElement.disabled = true;
+  submitBtnElement.textContent = SubmitBtnText.SENDING;
+};
 
-export { setupForm };
+const unblockSubmitBtn = () => {
+  submitBtnElement.disabled = false;
+  submitBtnElement.textContent = SubmitBtnText.IDLE;
+};
+// Вариант из лайва
+const setOnFormSubmit = (callback) => {
+  formElement.addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitBtn();
+      await callback(new FormData(formElement));
+      unblockSubmitBtn();
+    }
+  });
+};
+
+// Это вариант из демонстрации
+/*
+  formElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitBtn();
+      sendData(new FormData(evt.target))
+        .then(callback)
+        .catch((err) => {
+          showAlert(err.message);
+        }
+        )
+        .finally(unblockSubmitBtn);
+    }
+  });
+};
+*/
+
+
+export { hideModal, setupForm, setOnFormSubmit };
+
