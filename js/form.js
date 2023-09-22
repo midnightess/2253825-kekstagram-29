@@ -1,7 +1,7 @@
-import { isEscKeydown, /*showAlert*/ } from './utils.js';
+import { isEscKeydown, showAlert } from './utils.js';
 import { resetEffects } from './effects.js';
 import { resetScale } from './scale.js';
-//import { sendData } from './api.js';
+import { sendData } from './api.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
@@ -67,11 +67,6 @@ const hideModal = () => {
   resetAllInModal();
   imgOverlayElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
-  // Если ремуваю эти обработчики, пропадает возможность многократно загружать форму
-  // и вообще вылезает ошибка 404
-  //uploadFileElement.removeEventListener('change', showModal);
-  //cancelBtnElement.removeEventListener('click', hideModal);
-  //formElement.removeEventListener('submit', onFormSubmit);
 };
 
 const handleCloseOnEsc = (evt) => {
@@ -106,22 +101,10 @@ const unblockSubmitBtn = () => {
   submitBtnElement.disabled = false;
   submitBtnElement.textContent = SubmitBtnText.IDLE;
 };
-// Вариант из лайва
-const setOnFormSubmit = (callback) => {
-  formElement.addEventListener('submit', async (evt) => {
-    evt.preventDefault();
 
-    const isValid = pristine.validate();
-    if (isValid) {
-      blockSubmitBtn();
-      await callback(new FormData(formElement));
-      unblockSubmitBtn();
-    }
-  });
-};
 
-// Это вариант из демонстрации
-/*
+const setOnFormSubmit = (onSuccess) => {
+
   formElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
 
@@ -129,16 +112,16 @@ const setOnFormSubmit = (callback) => {
     if (isValid) {
       blockSubmitBtn();
       sendData(new FormData(evt.target))
-        .then(callback)
-        .catch((err) => {
-          showAlert(err.message);
-        }
+        .then(onSuccess)
+        .catch(
+          (err) => {
+            showAlert(err.message);
+          }
         )
         .finally(unblockSubmitBtn);
     }
   });
 };
-*/
 
 
 export { hideModal, setupForm, setOnFormSubmit };
