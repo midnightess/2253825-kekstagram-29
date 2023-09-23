@@ -1,22 +1,30 @@
 import { renderGallery } from './gallery.js';
 import { hideModal, setupForm, setOnFormSubmit } from './form.js';
 import { getData } from './api.js';
+import { showAlert } from './utils.js';
+import {showSuccessMessage, showErrorMessage} from './form-message.js';
 
-// на доработку:
-//import {showSuccessMessage, showErrorMessage} from './form-message.js';
-//import { showAlert } from './util.js';
 
 getData()
   .then((pictures) => {
     renderGallery(pictures);
-  });
-/* не работает :(
+  })
   .catch(
     (err) => {
       showAlert(err.message);
     }
   );
-*/
+
+
+const onSendFormSuccess = () => {
+  hideModal();
+  showSuccessMessage();
+};
+
+const onSendFormError = () => {
+  showErrorMessage();
+};
+
 setupForm();
-setOnFormSubmit(hideModal);
+setOnFormSubmit(onSendFormSuccess, onSendFormError);
 

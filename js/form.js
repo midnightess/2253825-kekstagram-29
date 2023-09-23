@@ -1,4 +1,4 @@
-import { isEscKeydown, showAlert } from './utils.js';
+import { isEscKeydown } from './utils.js';
 import { resetEffects } from './effects.js';
 import { resetScale } from './scale.js';
 import { sendData } from './api.js';
@@ -103,7 +103,7 @@ const unblockSubmitBtn = () => {
 };
 
 
-const setOnFormSubmit = (onSuccess) => {
+const setOnFormSubmit = (onSuccess, onError) => {
 
   formElement.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -113,11 +113,7 @@ const setOnFormSubmit = (onSuccess) => {
       blockSubmitBtn();
       sendData(new FormData(evt.target))
         .then(onSuccess)
-        .catch(
-          (err) => {
-            showAlert(err.message);
-          }
-        )
+        .catch(onError)
         .finally(unblockSubmitBtn);
     }
   });
