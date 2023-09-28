@@ -8,8 +8,9 @@ import { init, getFilteredPictures } from './filters.js';
 
 getData()
   .then((pictures) => {
-    init(pictures, debounce(renderGallery));
-    renderGallery(getFilteredPictures());
+    init(pictures, renderGallery(pictures));
+    getFilteredPictures(debounce(
+      () => renderGallery(pictures)));
   })
   .catch(
     (err) => {
