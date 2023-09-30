@@ -27,5 +27,19 @@ const showAlert = (message) => {
 const isEscKeydown = (evt) => evt.key === 'Escape';
 
 
-export { isEscKeydown, showAlert };
+const sortRandomly = () => Math.random() - 0.5;
+
+
+const debounce = (callback, timeoutDelay = 500) => {
+
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+
+export { isEscKeydown, showAlert, debounce, sortRandomly };
 

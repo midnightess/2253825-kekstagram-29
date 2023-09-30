@@ -6,6 +6,7 @@ import { sendData } from './api.js';
 const MAX_HASHTAG_COUNT = 5;
 const VALID_SYMBOLS = /^#[a-zа-яё0-9]{1,19}$/i;
 const TAG_ERROR_TEXT = 'Хештеги введены неверно';
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const bodyElement = document.querySelector('body');
 const formElement = bodyElement.querySelector('.img-upload__form');
@@ -15,6 +16,7 @@ const cancelBtnElement = bodyElement.querySelector('#upload-cancel');
 const hashtagElement = bodyElement.querySelector('.text__hashtags');
 const descriptionElement = bodyElement.querySelector('.text__description');
 const submitBtnElement = document.querySelector('.img-upload__submit');
+const uploadImgElement = formElement.querySelector('.img-upload__preview img');
 
 const SubmitBtnText = {
   IDLE: 'Опубликовать',
@@ -78,6 +80,15 @@ const handleCloseOnEsc = (evt) => {
 };
 
 const showModal = () => {
+
+  const file = uploadFileElement.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    uploadImgElement.src = URL.createObjectURL(file);
+  }
+
   imgOverlayElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
   document.addEventListener('keydown', handleCloseOnEsc);

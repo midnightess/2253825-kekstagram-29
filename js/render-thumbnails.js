@@ -22,6 +22,9 @@ const renderPictures = (pictures) => {
 
   const picturesFragment = document.createDocumentFragment();
 
+  const renderedPictureList = picturesContainer.querySelectorAll('.picture');
+  renderedPictureList.forEach((picture) => picture.remove());
+
   pictures.forEach((picture) => {
     const thumbnail = createPicture(picture);
     picturesFragment.append(thumbnail);
