@@ -13,9 +13,6 @@ const Filter = {
 let currentFilter = Filter.DEFAULT;
 let pictures = [];
 
-// Подтянула старую функцию получения рандомных чисел, тк из лайва мне не нра
-//const sortRandomly = () => Math.random() - 0.5;
-
 const sortRandomly = getRandomArrayElement;
 
 const sortByComments = (pictureA, pictureB) =>
@@ -29,6 +26,7 @@ const getFilteredPictures = () => {
       return [...pictures].sort(sortByComments);
     default:
       return [...pictures];
+
   }
 };
 
@@ -47,15 +45,15 @@ const onFilterClick = (filteredPictures) => {
       .classList.remove('img-filters__button--active');
     onBtnClick.classList.add('img-filters__button--active');
     currentFilter = onBtnClick.id;
-    filteredPictures(getFilteredPictures());
+    getFilteredPictures(filteredPictures);
   });
 };
 
-const init = (loadedPictures, filteredPictures) => {
+const initFilters = (loadedPictures) => {
   filterElement.classList.remove('img-filters--inactive');
   pictures = [...loadedPictures];
-  onFilterClick(filteredPictures);
+  onFilterClick(loadedPictures);
 };
 
 
-export { init, getFilteredPictures };
+export { initFilters, getFilteredPictures };
