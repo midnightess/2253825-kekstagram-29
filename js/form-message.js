@@ -17,6 +17,7 @@ const handleCloseOnEsc = (evt) => {
     evt.preventDefault();
     hideModalMessage();
     document.removeEventListener('keydown', handleCloseOnEsc);
+    document.removeEventListener('click', hideModalMessage);
   }
 };
 
