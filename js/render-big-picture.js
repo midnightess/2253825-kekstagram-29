@@ -26,7 +26,7 @@ const createComment = ({ avatar, name, message }) => {
 const renderComments = (comments, counter) => {
   let currentCounter = counter;
 
-  const hendlerLoadComments = () => {
+  const onLoadComments = () => {
     currentCounter += COMMENTS_STEP;
     renderComments(comments, currentCounter);
   };
@@ -36,7 +36,7 @@ const renderComments = (comments, counter) => {
     counter = comments.length;
   } else {
     commentsLoaderElement.classList.remove('hidden');
-    removeEventListener('click', hendlerLoadComments);
+    removeEventListener('click', onLoadComments);
   }
 
   const fragment = document.createDocumentFragment();
@@ -46,7 +46,7 @@ const renderComments = (comments, counter) => {
     fragment.append(comment);
   }
 
-  commentsLoaderElement.addEventListener('click', hendlerLoadComments, {once: true});
+  commentsLoaderElement.addEventListener('click', onLoadComments, {once: true});
 
   bigPictureCommentsElement.innerHTML = '';
   bigPictureCommentsElement.append(fragment);
@@ -62,16 +62,16 @@ const renderPictureDetails = ({ url, likes, description, }) => {
 };
 
 
-const hideBigPicture = () => {
+const onHideBigPicture = () => {
   bigPictureElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   commentFieldElement.reset();
 };
 
-const handleCloseOnEsc = (evt) => {
+const onEscClick = (evt) => {
   if(isEscKeydown(evt)) {
-    hideBigPicture();
-    document.removeEventListener('keydown', handleCloseOnEsc);
+    onHideBigPicture();
+    document.removeEventListener('keydown', onEscClick);
   }
 };
 
@@ -81,8 +81,8 @@ const showBigPicture = (picture) => {
   bigPictureElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
 
-  document.addEventListener('keydown', handleCloseOnEsc);
-  bigPictureCloseBtnElement.addEventListener('click', hideBigPicture, {once: true});
+  document.addEventListener('keydown', onEscClick);
+  bigPictureCloseBtnElement.addEventListener('click', onHideBigPicture, {once: true});
 
   renderPictureDetails(picture);
   renderComments(picture.comments, COMMENTS_STEP);

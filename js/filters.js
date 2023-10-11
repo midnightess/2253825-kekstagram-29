@@ -1,4 +1,4 @@
-import { sortRandomly, debounce } from './utils.js';
+import { sortRandomly } from './utils.js';
 
 
 const RANDOMLY_PICTURES_COUNT = 10;
@@ -30,7 +30,7 @@ const getFilteredPictures = () => {
   }
 };
 
-const onFilterClick = (loadedPictures, randerGallery) => {
+const onFilterClick = (randerGallery) => {
   filterElement.addEventListener('click', (evt) => {
     if (!evt.target.classList.contains('img-filters__button')) {
       return;
@@ -46,17 +46,15 @@ const onFilterClick = (loadedPictures, randerGallery) => {
     onBtnClick.classList.add('img-filters__button--active');
     currentFilter = onBtnClick.id;
 
-    const filteredPictures = getFilteredPictures(loadedPictures);
-    debounce(() => randerGallery(filteredPictures))();
-
+    const filteredPictures = getFilteredPictures(pictures);
+    randerGallery(filteredPictures);
   });
 };
 
-const initFilters = (loadedPictures, randerGallery) => {
+const initFilters = (loadedPictures) => {
   filterElement.classList.remove('img-filters--inactive');
   pictures = [...loadedPictures];
-  onFilterClick(loadedPictures, randerGallery);
 };
 
 
-export { initFilters };
+export { initFilters, onFilterClick };

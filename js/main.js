@@ -1,15 +1,17 @@
 import { renderGallery } from './gallery.js';
-import { hideModal, setupForm, setOnFormSubmit } from './form.js';
+import { onHideModal, setupForm, setOnFormSubmit } from './form.js';
 import { getData } from './api.js';
-import { showAlert } from './utils.js';
+import { showAlert, debounce } from './utils.js';
 import { showSuccessMessage, showErrorMessage } from './form-message.js';
-import { initFilters } from './filters.js';
+import { initFilters, onFilterClick } from './filters.js';
 
 
 getData()
   .then((pictures) => {
     renderGallery(pictures);
-    initFilters(pictures, renderGallery);
+    initFilters(pictures);
+
+    onFilterClick(debounce(renderGallery));
   })
   .catch(
     (err) => {
@@ -19,7 +21,7 @@ getData()
 
 
 const onSendFormSuccess = () => {
-  hideModal();
+  onHideModal();
   showSuccessMessage();
 };
 
@@ -29,3 +31,4 @@ const onSendFormError = () => {
 
 setupForm();
 setOnFormSubmit(onSendFormSuccess, onSendFormError);
+
