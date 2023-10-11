@@ -17,6 +17,8 @@ const hashtagElement = bodyElement.querySelector('.text__hashtags');
 const descriptionElement = bodyElement.querySelector('.text__description');
 const submitBtnElement = document.querySelector('.img-upload__submit');
 const uploadImgElement = formElement.querySelector('.img-upload__preview img');
+const imgIploadWrapperElement = imgOverlayElement.querySelector('.img-upload__wrapper');
+const effectsPreviewElement = document.querySelectorAll('.effects__preview');
 
 const SubmitBtnText = {
   IDLE: 'Опубликовать',
@@ -65,40 +67,53 @@ const resetAllInModal = () => {
   resetEffects();
 };
 
-const hideModal = () => {
+const onHideModal = () => {
   resetAllInModal();
   imgOverlayElement.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
 };
 
-const handleCloseOnEsc = (evt) => {
+const onEscClick = (evt) => {
   if(isEscKeydown(evt) && !onElementFocus()) {
     evt.preventDefault();
-    hideModal();
-    document.removeEventListener('keydown', handleCloseOnEsc);
+    onHideModal();
+    document.removeEventListener('keydown', onEscClick);
   }
 };
 
-const showModal = () => {
+const onShowModal = () => {
 
   const file = uploadFileElement.files[0];
   const fileName = file.name.toLowerCase();
 
   const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
   if (matches) {
-    uploadImgElement.src = URL.createObjectURL(file);
+
+    const fileUrl = URL.createObjectURL(file);
+
+    uploadImgElement.src = fileUrl;
+    effectsPreviewElement.forEach((item) => {
+      item.style.backgroundImage = `url(${fileUrl})`;
+    });
   }
 
   imgOverlayElement.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
-  document.addEventListener('keydown', handleCloseOnEsc);
+  document.addEventListener('keydown', onEscClick);
 };
 
 
 const setupForm = () => {
 
-  uploadFileElement.addEventListener('change', showModal);
-  cancelBtnElement.addEventListener('click', hideModal);
+  imgOverlayElement.addEventListener('click', () => {
+    onHideModal();
+  });
+  imgIploadWrapperElement.addEventListener('click', (evt) => {
+    evt.stopPropagation();
+  });
+
+  uploadFileElement.addEventListener('change', onShowModal);
+  cancelBtnElement.addEventListener('click', onHideModal);
   formElement.addEventListener('submit', onFormSubmit);
   descriptionElement.textContent = '';
 };
@@ -127,9 +142,10 @@ const setOnFormSubmit = (onSuccess, onError) => {
         .catch(onError)
         .finally(unblockSubmitBtn);
     }
+    document.removeEventListener('keydown', onEscClick);
   });
 };
 
 
-export { hideModal, setupForm, setOnFormSubmit };
+export { onHideModal, setupForm, setOnFormSubmit };
 
