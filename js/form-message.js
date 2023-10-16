@@ -18,6 +18,7 @@ const onEscClick = (evt) => {
     evt.preventDefault();
     onHideModalMessage();
     document.removeEventListener('keydown', onEscClick);
+    document.addEventListener('click', onHideModalMessage);
   }
 };
 
@@ -27,6 +28,7 @@ const showSuccessMessage = () => {
   templateSuccessMessage.classList.remove('hidden');
   document.addEventListener('keydown', onEscClick);
   successBtnElement.removeEventListener('click', onHideModalMessage);
+  document.addEventListener('click', onHideModalMessage);
 };
 
 
@@ -35,12 +37,12 @@ const showErrorMessage = () => {
   templateErrorMessage.classList.remove('hidden');
   document.addEventListener('keydown', onEscClick);
   errorBtnElement.removeEventListener('click', onHideModalMessage);
+  document.addEventListener('click', onHideModalMessage);
 };
 
 
 successBtnElement.addEventListener('click', onHideModalMessage);
 errorBtnElement.addEventListener('click', onHideModalMessage);
-document.addEventListener('click', onHideModalMessage);
 
 
 export { showSuccessMessage, showErrorMessage };
