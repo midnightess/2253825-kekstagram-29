@@ -10,8 +10,8 @@ const errorBtnElement = templateErrorMessage.querySelector('.error__button');
 const onHideModalMessage = () => {
   templateSuccessMessage.classList.add('hidden');
   templateErrorMessage.classList.add('hidden');
-  document.addEventListener('click', onHideModalMessage);
 };
+
 
 const onEscClick = (evt) => {
   if(isEscKeydown(evt)) {
@@ -21,22 +21,26 @@ const onEscClick = (evt) => {
   }
 };
 
+
 const showSuccessMessage = () => {
   bodyElement.append(templateSuccessMessage);
   templateSuccessMessage.classList.remove('hidden');
+  document.addEventListener('keydown', onEscClick);
   successBtnElement.removeEventListener('click', onHideModalMessage);
 };
+
 
 const showErrorMessage = () => {
   bodyElement.append(templateErrorMessage);
   templateErrorMessage.classList.remove('hidden');
+  document.addEventListener('keydown', onEscClick);
   errorBtnElement.removeEventListener('click', onHideModalMessage);
 };
 
-document.addEventListener('keydown', onEscClick);
+
 successBtnElement.addEventListener('click', onHideModalMessage);
 errorBtnElement.addEventListener('click', onHideModalMessage);
+document.addEventListener('click', onHideModalMessage);
 
 
 export { showSuccessMessage, showErrorMessage };
-
