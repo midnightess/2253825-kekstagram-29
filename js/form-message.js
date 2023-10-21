@@ -7,36 +7,42 @@ const templateErrorMessage = bodyElement.querySelector('#error').content.querySe
 const errorBtnElement = templateErrorMessage.querySelector('.error__button');
 
 
-const hideModalMessage = () => {
+const onHideModalMessage = () => {
   templateSuccessMessage.classList.add('hidden');
   templateErrorMessage.classList.add('hidden');
 };
 
-const handleCloseOnEsc = (evt) => {
+
+const onEscClick = (evt) => {
   if(isEscKeydown(evt)) {
     evt.preventDefault();
-    hideModalMessage();
-    document.removeEventListener('keydown', handleCloseOnEsc);
-    document.removeEventListener('click', hideModalMessage);
+    onHideModalMessage();
+    document.removeEventListener('keydown', onEscClick);
+    document.addEventListener('click', onHideModalMessage);
   }
 };
+
 
 const showSuccessMessage = () => {
   bodyElement.append(templateSuccessMessage);
   templateSuccessMessage.classList.remove('hidden');
-  document.addEventListener('keydown', handleCloseOnEsc);
+  document.addEventListener('keydown', onEscClick);
+  successBtnElement.removeEventListener('click', onHideModalMessage);
+  document.addEventListener('click', onHideModalMessage);
 };
+
 
 const showErrorMessage = () => {
   bodyElement.append(templateErrorMessage);
   templateErrorMessage.classList.remove('hidden');
-  document.addEventListener('keydown', handleCloseOnEsc);
+  document.addEventListener('keydown', onEscClick);
+  errorBtnElement.removeEventListener('click', onHideModalMessage);
+  document.addEventListener('click', onHideModalMessage);
 };
 
-successBtnElement.addEventListener('click', hideModalMessage);
-errorBtnElement.addEventListener('click', hideModalMessage);
-document.addEventListener('click', hideModalMessage);
+
+successBtnElement.addEventListener('click', onHideModalMessage);
+errorBtnElement.addEventListener('click', onHideModalMessage);
 
 
 export { showSuccessMessage, showErrorMessage };
-
